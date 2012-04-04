@@ -28,6 +28,7 @@ class JSTwitter
          when 'elt' then everyones_last_tweet
          when 's' then shorten_url(parts[1..-1].join(" "))
          when 'turl' then tweet(parts[1..-2].join(" ") + " " + shorten(parts[-1]))
+         when 'k' then klout_score
          else
            puts "Sorry, I don't know how to '#{command}'"
        end
@@ -89,9 +90,16 @@ class JSTwitter
   
   def klout_score
     friends = followers_list
+    highest_klout = ["",0]
     friends.each do |friend|
-      puts friend.id + " has a Klout of: " + @k.klout(friend) + "\n"
+      score = @k.klout(friend)
+      puts friend.id + " has a Klout of: " + score  + "\n"
+      if (score > highest_klout[1]) 
+        highest_klout[0] = friend.id
+        highest_klout[1] = score
+      end
     end
+    puts "Your friend '" + highest_klout[0] + "' has the highest score of: " + highest_klout[1]
   end
   
 end
